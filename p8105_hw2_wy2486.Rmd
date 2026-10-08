@@ -126,7 +126,7 @@ nycsubwayreformat_df |>
   distinct(station_name,line) |>
   nrow()
 ```
-## Problem 2: Trash Wheel dataset
+## Problem 2: Trash Wheel Dataset
 
 **Read and clean the *Mr. Trash Wheel* dataset**
 ```{r message=FALSE, warning=FALSE}
@@ -183,6 +183,31 @@ gwynnda_df =
   )
 ```
 
+**Combining All Datasets**
+
+Combine *Mr. Trash Wheel*, *Professor Trash Wheel* and *Gwynnda* Datasets
+```{r message=FALSE, warning=FALSE}
+alltrashwheel_df =
+  bind_rows(
+    mr_trash_wheel_df,
+    prof_trash_wheel_df,
+    gwynnda_df
+  )
+```
+A snapshot of the first 10 observations in the final combined dataset is shown below:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+alltrashwheel_df |>
+  head(10) |>
+  knitr::kable()
+```
+
+The combined `alltrashwheel_df` dataset contains `r nrow(alltrashwheel_df)` observations and `r ncol(alltrashwheel_df)` variables. Key variables include *dumpster*, *month*, *year*, *date*, *weight_tons*, *volume_cubic_yards*, *plastic_bottles*, *polystyrene*, *cigarette_butts*, *glass_bottles*, *plastic_bags*, *wrappers*, *sports_balls*, *homes_powered*, and *trash_wheel*. The three Trash Wheel datasets were imported from separate Excel sheets, cleaned using standardized variable names, restricted to dumpster-specific observations, and combined using `bind_rows()`. 
+
+During the cleaning process, variables such as *year* and *plastic_bottles* were converted to consistent integer or numeric formats because their data types were not standardized across the three datasets. A *trash_wheel* variable was also added before combining the datasets to identify the source of each observation.
+
+The total weight of trash collected by Professor Trash Wheel is **`r alltrashwheel_df |> filter(trash_wheel == "Professor Trash Wheel") |> summarize(total = sum(weight_tons, na.rm = TRUE)) |> pull(total)`** tons.
+
+The total number of cigarette butts collected by Gwynnda in June of 2022 is **`r alltrashwheel_df |> filter(trash_wheel == "Gwynnda", month == "June", year == 2022) |> summarize(total = sum(cigarette_butts, na.rm = TRUE)) |> pull(total)`**.
 
 
 
