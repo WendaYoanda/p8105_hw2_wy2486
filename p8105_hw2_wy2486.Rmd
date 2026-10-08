@@ -1,0 +1,27 @@
+---
+title: "p8105_hw2_wy2486"
+output: github_document
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(readxl)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
