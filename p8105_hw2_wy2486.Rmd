@@ -52,6 +52,80 @@ The original dataset `nycsubway_df` contains 1,868 observations and 32 variables
 
 After these steps, the cleaned dataset `nycsubwayfinal_df` contains 1,868 observations and 19 variables, resulting in a dimension of 1,868 × 19. The retained variables include *Line, Station Name, Station Latitude, Station Longitude, Routes (1–11), Entry, Vending, Entrance Type,* and *ADA Compliance*. The dataset is not fully tidy because the routes served are stored across multiple columns rather than in a single route variable.
 
+### Analyzing The Cleaned Dataset
+**How many distinct stations are there?**
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+nrow(
+  distinct(
+    nycsubwayfinal_df,
+    station_name,
+    line
+  )
+)
+```
+**How many stations are ADA compliant?**
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+nycsubwayfinal_df |>
+  filter(ada == TRUE) |>
+  distinct(station_name, line) |>
+  nrow()
+```
+**What proportion of station entrances / exits without vending allow entrance (%)?**
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+round(
+  nrow(
+    filter(
+      nycsubwayfinal_df,
+      vending == "NO",
+      entry == TRUE
+    )
+  ) /
+  nrow(
+    filter(
+      nycsubwayfinal_df,
+      vending == "NO"
+    )
+  ) * 100,
+  2
+)
+```
+**Reformatting Data** 
+
+Reformat so that route number and route name are distinct variables
+<!-- I use ChatGPT here to debug my code, as there is error message saying that there are some of the route datasets that are not all the same type of data, so needed to be changed to character, hence, I use the mutate(across(route1:route11, as.character) -->
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+nycsubwayreformat_df =
+  nycsubwayfinal_df |>
+  mutate(
+    across(route1:route11, as.character)
+  ) |>
+  pivot_longer(
+    route1:route11,
+    names_to = "route_number",
+    values_to = "route_name"
+  )
+
+nycsubwayreformat_df |>
+  head(10) |>
+  knitr::kable()
+```
+
+**How many distinct stations serve the A train?**
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+nycsubwayreformat_df |>
+  filter(route_name == "A") |>
+  distinct(station_name, line) |>
+  nrow()
+```
+
+**Of the stations that serve the A train, how many are ADA compliant?**
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+nycsubwayreformat_df |>
+  filter(route_name == "A", ada == TRUE) |>
+  distinct(station_name,line) |>
+  nrow()
+```
 
 
 
