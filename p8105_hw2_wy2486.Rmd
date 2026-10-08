@@ -11,7 +11,7 @@ library(readxl)
 
 ## Problem 1: NYC Transit data
 
-**Read and clean the data**
+**Read and clean the dataset**
 ```{r message=FALSE, warning=FALSE}
 nycsubway_df =
   read_csv(
@@ -126,7 +126,62 @@ nycsubwayreformat_df |>
   distinct(station_name,line) |>
   nrow()
 ```
+## Problem 2: Trash Wheel dataset
 
+**Read and clean the *Mr. Trash Wheel* dataset**
+```{r message=FALSE, warning=FALSE}
+mr_trash_wheel_df =
+  read_excel(
+    "./datahw2/202610 Trash Wheel Collection Data.xlsx",
+    sheet = "Mr. Trash Wheel",
+    range = "A2:N742",
+    na = c("", "NA", ".")
+  ) |>
+  janitor::clean_names() |>
+  drop_na(dumpster) |>
+  mutate(
+    year = as.integer(year),
+    plastic_bottles = as.numeric(plastic_bottles),
+    sports_balls = as.integer(round(sports_balls)),
+    trash_wheel = "Mr. Trash Wheel"
+  )
+```
+
+**Read and clean the *Professor Trash Wheel* dataset**
+```{r message=FALSE, warning=FALSE}
+prof_trash_wheel_df =
+  read_excel(
+    "./datahw2/202610 Trash Wheel Collection Data.xlsx",
+    sheet = "Professor Trash Wheel",
+    range = "A2:M139",
+    na = c("", "NA", ".")
+  ) |>
+  janitor::clean_names() |>
+  drop_na(dumpster) |>
+  mutate(
+    year = as.integer(year),
+    plastic_bottles = as.numeric(plastic_bottles),
+    trash_wheel = "Professor Trash Wheel"
+  )
+```
+
+**Read and clean the *Gwynnda* dataset**
+```{r message=FALSE, warning=FALSE}
+gwynnda_df =
+  read_excel(
+    "./datahw2/202610 Trash Wheel Collection Data.xlsx",
+    sheet = "Gwynnda the Good Wheel of the W",
+    range = "A2:L394",
+    na = c("", "NA", ".")
+  ) |>
+  janitor::clean_names() |>
+  drop_na(dumpster) |>
+  mutate(
+    year = as.integer(year),
+    plastic_bottles = as.numeric(plastic_bottles),
+    trash_wheel = "Gwynnda"
+  )
+```
 
 
 
