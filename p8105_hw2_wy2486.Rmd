@@ -1,5 +1,6 @@
 ---
-title: "p8105_hw2_wy2486"
+title: "P8105 Homework 2"
+author: "By Wenda Yoanda, UNI:wy2486" 
 output: github_document
 ---
 
@@ -7,6 +8,49 @@ output: github_document
 library(tidyverse)
 library(readxl)
 ```
+
+## Problem 1: NYC Transit data
+
+**Read and clean the data**
+```{r message=FALSE, warning=FALSE}
+nycsubway_df =
+  read_csv(
+    file = "./datahw2/NYC_Transit_Subway_Entrance_And_Exit_Data.csv",
+    na = c("", "NA", ".")
+    )
+  
+nycsubway_df = janitor::clean_names(nycsubway_df)
+```
+
+**Retain relevant variables and recode *entry* **
+```{r message=FALSE, warning=FALSE}
+nycsubwayfinal_df =
+nycsubway_df |>
+select(line, 
+       station_name, 
+       station_latitude, 
+       station_longitude, 
+       starts_with("route"),
+       entry,
+       vending,
+       entrance_type,
+       ada) |>
+  mutate(
+    entry= case_match(
+      entry,
+      "YES"~ TRUE,
+      "NO"~ FALSE)
+    )
+```
+
+The original dataset `nycsubway_df` contains 1,868 observations and 32 variables. The dataset was cleaned by:
+
+1. Standardizing variable names to lowercase with underscores using `clean_names()`.
+2. Treating blank values, `"NA"`, and `"."` as missing values.
+3. Retaining only the variables relevant to the analysis using `select()`.
+4. Converting the `entry` variable from `"YES"` / `"NO"` to a logical variable (`TRUE` / `FALSE`) using `mutate()` and `case_match()`.
+
+After these steps, the cleaned dataset `nycsubwayfinal_df` contains 1,868 observations and 19 variables, resulting in a dimension of 1,868 × 19. The retained variables include *Line, Station Name, Station Latitude, Station Longitude, Routes (1–11), Entry, Vending, Entrance Type,* and *ADA Compliance*. The dataset is not fully tidy because the routes served are stored across multiple columns rather than in a single route variable.
 
 
 
